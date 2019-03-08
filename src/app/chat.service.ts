@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs/Rx';
 import { WebsocketService } from './websocket.service';
 
@@ -16,12 +17,12 @@ export class ChatService {
 	constructor(wsService: WebsocketService) {
 		this.messages = <Subject<Message>>wsService
 			.connect(CHAT_URL)
-			.map((response: MessageEvent): Message => {
+			.pipe(map((response: MessageEvent): Message => {
 				let data = JSON.parse(response.data);
 				return {
 					author: data.author,
 					message: data.message
 				}
-			});
+			}));
 	}
 }
